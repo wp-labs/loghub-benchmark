@@ -1,0 +1,10 @@
+package apache/error {
+    rule e2_worker_env_init {
+        (
+            chars:Time<[,]>,
+            chars:Level<[,]>,
+            peek_symbol(workerEnv),
+            chars:Content\,                                                                                                    
+        )                                                                                                                              
+    }
+}

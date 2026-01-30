@@ -1,0 +1,8 @@
+name : /oml/apache_error_e3
+rule : apache/error/e3_worker_env_error
+---
+Time = read(Time);
+Level = read(Level);
+Content : chars = fmt("{mod_jk} {child} {Content}" ,@mod_jk,@child,@Content);
+EventId = chars(E3);
+EventTemplate = chars(mod_jk child workerEnv in error state <*>);

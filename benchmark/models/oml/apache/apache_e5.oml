@@ -1,0 +1,8 @@
+name : /oml/apache_error_e5
+rule : apache/error/e5_jk2_cant_find
+---
+Time = read(Time);
+Level = read(Level);
+Content : chars = fmt("{jk2_init} {Content}" ,@jk2_init,@Content);
+EventId = chars(E5);
+EventTemplate = chars(jk2_init() Can't find child <*> in scoreboard);

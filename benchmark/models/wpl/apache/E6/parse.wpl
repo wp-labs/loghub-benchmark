@@ -1,0 +1,12 @@
+package apache/error {
+    rule e6_mod_jk_child_init {
+        (
+            chars:Time<[,]>,
+            chars:Level<[,]>,
+            chars:mod_jk,
+            chars:child,
+            peek_symbol(init),
+            chars:Content\,                                                                                      
+        )                                                                                      
+    }
+}

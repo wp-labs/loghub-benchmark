@@ -1,0 +1,12 @@
+package apache/error {
+    rule e3_worker_env_error {
+        (
+            chars:Time<[,]>,
+            chars:Level<[,]>,
+            chars:mod_jk,
+            chars:child,
+            peek_symbol(workerEnv),
+            chars:Content\,                                                                                                    
+        )                                                                                                                                
+    }
+}

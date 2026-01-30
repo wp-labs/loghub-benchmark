@@ -1,0 +1,8 @@
+name : /oml/apache_error_e4
+rule : apache/error/e4_directory_forbidden
+---
+Time = read(Time);
+Level = read(Level);
+Content : chars = fmt("{client} {Content}" ,@client,@Content);
+EventId = chars(E4);
+EventTemplate = chars([client <*>] Directory index forbidden by rule: <*>);

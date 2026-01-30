@@ -1,0 +1,11 @@
+package apache/error {
+    rule e5_jk2_cant_find {
+        (
+            chars:Time<[,]>,
+            chars:Level<[,]>,
+            chars:jk2_init,
+            peek_symbol(Can't),
+            chars:Content\,                                                                                      
+        )                                                                                 
+    }
+}

@@ -1,0 +1,8 @@
+name : /oml/apache_error_e2
+rule : apache/error/e2_worker_env_init
+---
+Time = read(Time);
+Level = read(Level);
+Content = read(Content);   
+EventId = chars(E2);
+EventTemplate = chars(workerEnv.init() ok <*>);

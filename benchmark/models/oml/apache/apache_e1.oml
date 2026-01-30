@@ -1,0 +1,8 @@
+name : /oml/apache_error_e1                                                                                                             
+rule : apache/error/e1_jk2_found_child
+---
+Time = read(Time);
+Level = read(Level);
+Content : chars = fmt("jk2_init() {Content}" ,@Content) ;   
+EventId = chars(E1);
+EventTemplate = chars(jk2_init() Found child <*> in scoreboard slot <*>);

@@ -1,0 +1,8 @@
+name : /oml/apache_error_e6
+rule : apache/error/e6_mod_jk_child_init
+---
+Time = read(Time);
+Level = read(Level);
+Content : chars = fmt("{mod_jk} {child} {Content}" ,@mod_jk,@child,@Content);
+EventId = chars(E6);
+EventTemplate = chars(mod_jk child init <*> <*>);

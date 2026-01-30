@@ -1,0 +1,12 @@
+package apache/error {
+    rule e1_jk2_found_child
+    {
+        (
+            chars:Time<[,]>,
+            chars:Level<[,]>,
+            chars, 
+            peek_symbol(Found),
+            chars:Content\
+        )
+    }
+}

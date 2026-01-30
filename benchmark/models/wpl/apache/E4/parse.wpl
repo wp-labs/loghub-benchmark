@@ -1,0 +1,11 @@
+package apache/error {
+    rule e4_directory_forbidden {
+        (
+            chars:Time<[,]>,
+            chars:Level<[,]>,
+            chars:client<[,]>,
+            peek_symbol(Directory),
+            chars:Content\,                                                                                                    
+        )              
+    }
+}

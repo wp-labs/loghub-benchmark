@@ -1,0 +1,6 @@
+[[connectors]]
+id = "mysql_sink"
+type = "mysql"
+allow_override = ["endpoint", "username", "password","database","table","columns","batch"]
+[connectors.params]
+batch = 20
