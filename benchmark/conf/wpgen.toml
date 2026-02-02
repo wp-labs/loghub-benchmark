@@ -1,0 +1,18 @@
+version = "1.0"
+
+[generator]
+mode = "sample"
+count = 1
+speed = 0
+parallel = 1
+
+[output]
+name = "gen_out"
+connect = "tcp_sink"
+params = { port= 19001  }
+
+[logging]
+level = "debug"
+module_levels = ["ctrl=info", "launch=info"]
+output = "file"
+file_path = "./data/logs/"
