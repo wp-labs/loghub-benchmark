@@ -15,9 +15,9 @@
 
 表 1.0.1-1：Mixed Log（File -> BlackHole / TCP -> BlackHole ）
 
-| 引擎          | 拓扑              | EPS       | MPS    | CPU (Avg/Peak) | MEM (Avg/Peak)  |
-| :------------ | :---------------- | --------- | ------ | :------------- | :-------------- |
-| **WarpParse** | File -> BlackHole | 2,027,100 | 161.42 | 759% / 889%    | 263 MB / 279 MB |
-| Vector    | File -> BlackHole | 597,941   | 47.62  | 325% / 342%    | 235 MB / 254 MB |
-| **WarpParse** | TCP -> BlackHole  | 1,272,100 | 101.30 | 655% / 743%    | 157 MB / 160 MB |
-| Vector    | TCP -> BlackHole  | 1,242,500 | 98.94  | 586% / 643%    | 219 MB / 224 MB |
+| 引擎          | 拓扑              | EPS       | MPS    | CPU (Avg/Peak) | MEM (Avg/Peak)  | 性能倍数 |
+| :------------ | :---------------- | --------- | ------ | :------------- | :-------------- | --------------- |
+| **WarpParse** | File -> BlackHole | 1,613,700 | 128.50 | 782% / 798% | 679 MB / 691 MB | **2.70x** |
+| Vector    | File -> BlackHole | 597,941   | 47.62  | 325% / 342%    | 235 MB / 254 MB | 1.0x |
+| **WarpParse** | TCP -> BlackHole  | 1,300,600 | 103.57 | 815% / 827% | 607 MB / 621 MB | **1.05x** |
+| Vector    | TCP -> BlackHole  | 1,242,500 | 98.94  | 586% / 643%    | 219 MB / 224 MB | 1.0x |
