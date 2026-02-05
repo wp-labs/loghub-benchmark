@@ -4,8 +4,6 @@ package apache/error {
         (
             chars:Time<[,]>,
             chars:Level<[,]>,
-            chars, 
-            peek_symbol(Found),
             chars:Content\
         )
     }

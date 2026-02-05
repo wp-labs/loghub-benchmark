@@ -1,8 +1,41 @@
-name : /oml/apache_error_e1                                                                                                             
+name : /oml/apache_error_e1                                                        
 rule : apache/error/e1_jk2_found_child
 ---
 Time = read(Time);
 Level = read(Level);
-Content : chars = fmt("jk2_init() {Content}" ,@Content) ;   
-EventId = chars(E1);
-EventTemplate = chars(jk2_init() Found child <*> in scoreboard slot <*>);
+Content = read(Content);
+__E1 = object { 
+     id = chars(E1);
+     tpl = chars(jk2_init() Found child <*> in scoreboard slot <*>)
+};
+__E2 = object { 
+     id = chars(E2);
+     tpl = chars(workerEnv.init() ok <*>)
+};
+__E3 = object { 
+     id = chars(E3);
+     tpl = chars(mod_jk child workerEnv in error state <*>)
+};
+__E4 = object { 
+     id = chars(E4);
+     tpl = chars([client <*>] Directory index forbidden by rule: <*>)
+};
+__E5 = object { 
+     id = chars(E5);
+     tpl = chars(jk2_init() Can't find child <*> in scoreboard)
+};
+__E6 = object { 
+     id = chars(E6);
+     tpl = chars(mod_jk child init <*> <*>)
+};
+__target = match read(Content){
+    starts_with('jk2_init() Found child') => read(__E1);
+    starts_with('workerEnv.init() ok') => read(__E2);
+    starts_with('mod_jk child workerEnv in error state') => read(__E3);
+    contains('Directory index forbidden by rule:') => read(__E4);
+    starts_with('jk2_init() Can't find child') => read(__E5);
+    starts_with('mod_jk child init') => read(__E6);
+};
+EventId = read(__target) | get(id);
+EventTemplate = read(__target) | get(tpl);
+
