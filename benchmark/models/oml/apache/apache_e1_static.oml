@@ -1,6 +1,6 @@
-name : /oml/apache_static
+name : /oml/static/apache
 rule : apache/error/e1_jk2_found_child
-enable :  true
+//enable :  false
 ---
 static {
     E1 = object {

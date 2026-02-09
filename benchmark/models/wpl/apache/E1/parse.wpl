@@ -4,7 +4,7 @@ package apache/error {
         (
             chars:Time<[,]>,
             chars:Level<[,]>,
-            chars:Content\
+            chars:Content\0
         )
     }
 }

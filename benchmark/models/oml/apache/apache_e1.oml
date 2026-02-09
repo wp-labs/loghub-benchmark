@@ -1,4 +1,4 @@
-name : /oml/apache_normal
+name : /oml/normal/apache
 rule : apache/error/e1_jk2_found_child
 enable :  false
 ---

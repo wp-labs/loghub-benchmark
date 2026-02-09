@@ -4,7 +4,7 @@ version = "2.0"
 name = "biz_static"
 #parallel = 2
 parallel =  ${WORK_CNT:6}
-oml= ["/oml/apache_static"]
+oml= ["/oml/static/*"]
 #tags = ["group:benchmark", "type:business"]
 
 # Null sink 用于性能基准测试
