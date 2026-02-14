@@ -1,0 +1,163 @@
+name : /oml/static/openssh
+rule : Openssh/auth_failed
+enable : true
+---
+
+static {
+    E1 = object {
+        id = chars(E1);
+        tpl = chars(Accepted password for <*> from <*> port <*> ssh2)
+    };
+    E2 = object {
+        id = chars(E2);
+        tpl = chars(Connection closed by <*> [preauth])
+    };
+
+    E3 = object {
+        id = chars(E3);
+        tpl = chars(Did not receive identification string from <*>)
+    };
+    E4 = object {
+        id = chars(E4);
+        tpl = chars(Disconnecting: Too many authentication failures for admin [preauth])
+    };
+    E5 = object {
+        id = chars(E5);
+        tpl = chars(Disconnecting: Too many authentication failures for root [preauth])
+    };
+    E6 = object {
+        id = chars(E6);
+        tpl = chars(error: Received disconnect from <*>: <*>: com.jcraft.jsch.JSchException: Auth fail [preauth])
+    };
+    E7 = object {
+        id = chars(E7);
+        tpl = chars(error: Received disconnect from <*>: <*>: No more user authentication methods available. [preauth])
+    };
+    E8 = object {
+        id = chars(E8);
+        tpl = chars(Failed none for invalid user <*> from <*> port <*> ssh2)
+    };
+    E9 = object {
+        id = chars(E9);
+        tpl = chars(Failed password for <*> from <*> port <*> ssh2)
+    };
+    E10 = object {
+        id = chars(E10);
+        tpl = chars(Failed password for invalid user <*> from <*> port <*> ssh2)
+    };
+    E11 = object {
+        id = chars(E11);
+        tpl = chars(fatal: Write failed: Connection reset by peer [preauth])
+    };
+    E12 = object {
+        id = chars(E12);
+        tpl = chars(input_userauth_request: invalid user <*> [preauth])
+    };
+    E13 = object {
+        id = chars(E13);
+        tpl = chars(Invalid user <*> from <*>)
+    };
+    E14 = object {
+        id = chars(E14);
+        tpl = chars(message repeated <*> times: [ Failed password for root from <*> port <*>])
+    };
+    E15 = object {
+        id = chars(E15);
+        tpl = chars(PAM <*> more authentication failure; logname= uid=<*> euid=<*> tty=ssh ruser= rhost=<*>)
+    };
+    E16 = object {
+        id = chars(E16);
+        tpl = chars(PAM <*> more authentication failures; logname= uid=<*> euid=<*> tty=ssh ruser= rhost=<*>)
+    };
+    E17 = object {
+        id = chars(E17);
+        tpl = chars(PAM <*> more authentication failures; logname= uid=<*> euid=<*> tty=ssh ruser= rhost=<*> user=root)
+    };
+    E18 = object {
+        id = chars(E18);
+        tpl = chars(PAM service(sshd) ignoring max retries; <*> > <*>)
+    };
+    E19 = object {
+        id = chars(E19);
+        tpl = chars(pam_unix(sshd:auth): authentication failure; logname= uid=<*> euid=<*> tty=ssh ruser= rhost=<*>)
+    };
+    E20 = object {
+        id = chars(E20);
+        tpl = chars(pam_unix(sshd:auth): authentication failure; logname= uid=<*> euid=<*> tty=ssh ruser= rhost=<*> user=<*>)
+    };
+    E21 = object {
+        id = chars(E21);
+        tpl = chars(pam_unix(sshd:auth): check pass; user unknown)
+    };
+    E22 = object {
+        id = chars(E22);
+        tpl = chars(pam_unix(sshd:session): session closed for user <*>)
+    };
+    E23 = object {
+        id = chars(E23);
+        tpl = chars(pam_unix(sshd:session): session opened for user <*> by (uid=<*>))
+    };
+    E24 = object {
+        id = chars(E24);
+        tpl = chars(Received disconnect from <*>: <*>: Bye Bye [preauth])
+    };
+    E25 = object {
+        id = chars(E25);
+        tpl = chars(Received disconnect from <*>: <*>: Closed due to user request. [preauth])
+    };
+    E26 = object {
+        id = chars(E26);
+        tpl = chars(Received disconnect from <*>: <*>: disconnected by user)
+    };
+    E27 = object {
+        id = chars(E27);
+        tpl = chars(reverse mapping checking getaddrinfo for <*> [<*>] failed - POSSIBLE BREAK-IN ATTEMPT!)
+    };
+}
+Date = read(Date);
+Day = read(Day);
+Time = read(time);
+Component = read(Component);
+pid = read(pid);
+Content = read(Content);
+
+__target = match (read(Content), read(Content), read(Content))
+{
+    (starts_with('PAM'), contains('more authentication failures;'), contains('user=root')) => E17,
+};
+
+__target = match (read(Content), read(Content))
+{
+    (starts_with('PAM'), contains('more authentication failures;')) => E16,
+    (starts_with('pam_unix(sshd:auth): authentication failure;'), contains(' user=')) => E20,
+    (starts_with('Received disconnect from '), contains('Bye Bye [preauth]')) => E24,
+    (starts_with('Received disconnect from '), contains('Closed due to user request. [preauth]')) => E25,
+    (starts_with('Received disconnect from '), contains('disconnected by user')) => E26,
+    (starts_with('reverse mapping checking getaddrinfo for '), contains('POSSIBLE BREAK-IN ATTEMPT!')) => E27,
+};
+
+__target = match read(Content) {
+    starts_with('Accepted password for') => E1;
+    starts_with('Connection closed by ') => E2;
+    starts_with('Did not receive identification string from ') => E3;
+    starts_with('Disconnecting: Too many authentication failures for admin ') => E4;
+    starts_with('Disconnecting: Too many authentication failures for root ') => E5;
+    contains('JSchException: Auth fail') => E6;
+    contains('No more user authentication methods available.') => E7;
+    starts_with('Failed none for invalid user ') => E8;
+    starts_with('Failed password for invalid user ') => E10;
+    starts_with('Failed password for ') => E9;
+    starts_with('fatal: Write failed: Connection reset by peer ') => E11;
+    starts_with('input_userauth_request: invalid user ') => E12;
+    starts_with('Invalid user ') => E13;
+    contains('Failed password for root') => E14;
+    contains('more authentication failure;') => E15;
+    starts_with('PAM service(sshd) ignoring max retries; ') => E18;
+    starts_with('pam_unix(sshd:auth): authentication failure;') => E19,
+    starts_with('pam_unix(sshd:auth): check pass; user unknown') => E21,
+    starts_with('pam_unix(sshd:session): session closed for user ') => E22,
+    starts_with('pam_unix(sshd:session): session opened for user ') => E23,
+};
+
+EventId = read(__target) | get(id);
+EventTemplate = read(__target) | get(tpl);

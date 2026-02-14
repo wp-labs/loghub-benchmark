@@ -1,0 +1,15 @@
+package Openssh {
+    rule auth_failed
+    {
+        (
+            chars:Date,
+            digit:Day,
+            chars:time,
+            chars:Component,
+            _\[,
+            chars:pid\],
+            _,
+            chars:Content\,
+        )
+    }
+}

@@ -11,7 +11,7 @@ sinks = "../../sinks/to_blackhole"
 [performance]
 parse_workers = 6
 #rate_limit_rps = 0
-rate_limit_rps = 1580000
+rate_limit_rps = 1900000
 
 
 [rescue]

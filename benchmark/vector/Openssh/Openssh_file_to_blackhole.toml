@@ -1,0 +1,149 @@
+[sources.file_source_1]
+type = "file"
+include = ["../data/in_dat/gen1.dat"]
+read_from = "beginning"
+data_dir = "../data/"
+
+[transforms.parser]
+type = "remap"
+inputs = ["file_source_1"]
+source = '''
+parsed, err = parse_regex(
+  .message,
+  r'^(?P<Date>\w{3})\s+(?P<Day>\d{1,2})\s+(?P<time>\d{2}:\d{2}:\d{2})\s+(?P<Component>\S+)\s+(?P<Process>[^\s\[]+)(?:\[(?P<pid>\d+)\])?:\s+(?P<Content>.*)$'
+)
+
+if err == null {
+  .Date = parsed.Date
+  .Day = to_int(parsed.Day) ?? parsed.Day
+  .time = parsed.time
+  .Component = parsed.Component
+  .pid = parsed.pid
+  .Content = parsed.Content
+} else {
+  .Content = .message
+}
+
+.Content = to_string(.Content) ?? ""
+
+if starts_with(.Content, "Accepted password for ") {
+  .EventId = "E1"
+  .EventTemplate = "Accepted password for <*> from <*> port <*> ssh2"
+
+} else if starts_with(.Content, "Connection closed by ") && contains(.Content, "[preauth]") {
+  .EventId = "E2"
+  .EventTemplate = "Connection closed by <*> [preauth]"
+
+} else if starts_with(.Content, "Did not receive identification string from ") {
+  .EventId = "E3"
+  .EventTemplate = "Did not receive identification string from <*>"
+
+} else if starts_with(.Content, "Disconnecting: Too many authentication failures for admin ") {
+  .EventId = "E4"
+  .EventTemplate = "Disconnecting: Too many authentication failures for admin [preauth]"
+
+} else if starts_with(.Content, "Disconnecting: Too many authentication failures for root ") {
+  .EventId = "E5"
+  .EventTemplate = "Disconnecting: Too many authentication failures for root [preauth]"
+
+} else if starts_with(.Content, "error: Received disconnect from ") && contains(.Content, "JSchException: Auth fail") {
+  .EventId = "E6"
+  .EventTemplate = "error: Received disconnect from <*>: <*>: com.jcraft.jsch.JSchException: Auth fail [preauth]"
+
+} else if starts_with(.Content, "error: Received disconnect from ") && contains(.Content, "No more user authentication methods available.") {
+  .EventId = "E7"
+  .EventTemplate = "error: Received disconnect from <*>: <*>: No more user authentication methods available. [preauth]"
+
+} else if starts_with(.Content, "Failed none for invalid user ") {
+  .EventId = "E8"
+  .EventTemplate = "Failed none for invalid user <*> from <*> port <*> ssh2"
+
+# 注意：E10 必须在 E9 前
+} else if starts_with(.Content, "Failed password for invalid user ") {
+  .EventId = "E10"
+  .EventTemplate = "Failed password for invalid user <*> from <*> port <*> ssh2"
+
+} else if starts_with(.Content, "Failed password for ") {
+  .EventId = "E9"
+  .EventTemplate = "Failed password for <*> from <*> port <*> ssh2"
+
+} else if starts_with(.Content, "fatal: Write failed: Connection reset by peer ") {
+  .EventId = "E11"
+  .EventTemplate = "fatal: Write failed: Connection reset by peer [preauth]"
+
+} else if starts_with(.Content, "input_userauth_request: invalid user ") {
+  .EventId = "E12"
+  .EventTemplate = "input_userauth_request: invalid user <*> [preauth]"
+
+} else if starts_with(.Content, "Invalid user ") {
+  .EventId = "E13"
+  .EventTemplate = "Invalid user <*> from <*>"
+
+} else if starts_with(.Content, "message repeated ") && contains(.Content, "Failed password for root") {
+  .EventId = "E14"
+  .EventTemplate = "message repeated <*> times: [ Failed password for root from <*> port <*>]"
+
+# 注意：E17 必须在 E16 前
+} else if starts_with(.Content, "PAM ") && contains(.Content, "more authentication failures;") && contains(.Content, "user=root") {
+  .EventId = "E17"
+  .EventTemplate = "PAM <*> more authentication failures; logname= uid=<*> euid=<*> tty=ssh ruser= rhost=<*>  user=root"
+
+} else if starts_with(.Content, "PAM ") && contains(.Content, "more authentication failures;") {
+  .EventId = "E16"
+  .EventTemplate = "PAM <*> more authentication failures; logname= uid=<*> euid=<*> tty=ssh ruser= rhost=<*>"
+
+} else if starts_with(.Content, "PAM ") && contains(.Content, "more authentication failure;") {
+  .EventId = "E15"
+  .EventTemplate = "PAM <*> more authentication failure; logname= uid=<*> euid=<*> tty=ssh ruser= rhost= <*>"
+
+} else if starts_with(.Content, "PAM service(sshd) ignoring max retries; ") {
+  .EventId = "E18"
+  .EventTemplate = "PAM service(sshd) ignoring max retries; <*> > <*>"
+
+# 注意：E20 必须在 E19 前
+} else if starts_with(.Content, "pam_unix(sshd:auth): authentication failure;") && contains(.Content, " user=") {
+  .EventId = "E20"
+  .EventTemplate = "pam_unix(sshd:auth): authentication failure; logname= uid=<*> euid=<*> tty=ssh ruser= rhost=<*> user=<*>"
+
+} else if starts_with(.Content, "pam_unix(sshd:auth): authentication failure;") {
+  .EventId = "E19"
+  .EventTemplate = "pam_unix(sshd:auth): authentication failure; logname= uid=<*> euid=<*> tty=ssh ruser= rhost= <*>"
+
+} else if starts_with(.Content, "pam_unix(sshd:auth): check pass; user unknown") {
+  .EventId = "E21"
+  .EventTemplate = "pam_unix(sshd:auth): check pass; user unknown"
+
+} else if starts_with(.Content, "pam_unix(sshd:session): session closed for user ") {
+  .EventId = "E22"
+  .EventTemplate = "pam_unix(sshd:session): session closed for user <*>"
+
+} else if starts_with(.Content, "pam_unix(sshd:session): session opened for user ") {
+  .EventId = "E23"
+  .EventTemplate = "pam_unix(sshd:session): session opened for user <*> by (uid=<*>)"
+
+} else if starts_with(.Content, "Received disconnect from ") && contains(.Content, "Bye Bye [preauth]") {
+  .EventId = "E24"
+  .EventTemplate = "Received disconnect from <*>: <*>: Bye Bye [preauth]"
+
+} else if starts_with(.Content, "Received disconnect from ") && contains(.Content, "Closed due to user request. [preauth]") {
+  .EventId = "E25"
+  .EventTemplate = "Received disconnect from <*>: <*>: Closed due to user request. [preauth]"
+
+} else if starts_with(.Content, "Received disconnect from ") && contains(.Content, "disconnected by user") {
+  .EventId = "E26"
+  .EventTemplate = "Received disconnect from <*>: <*>: disconnected by user"
+
+} else if starts_with(.Content, "reverse mapping checking getaddrinfo for ") && contains(.Content, "POSSIBLE BREAK-IN ATTEMPT!") {
+  .EventId = "E27"
+  .EventTemplate = "reverse mapping checking getaddrinfo for <*> [<*>] failed - POSSIBLE BREAK-IN ATTEMPT!"
+}
+
+del(.message)
+'''
+
+[sinks.file_out]
+type = "blackhole"
+inputs = ["parser"]
+
+[api]
+    enabled = true
