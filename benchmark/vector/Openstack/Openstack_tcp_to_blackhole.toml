@@ -1,0 +1,178 @@
+[sources.tcp_source_1]
+type = "socket"
+address = "127.0.0.1:19001"
+mode = "tcp"
+max_length = 10485760
+
+[transforms.parser]
+type = "remap"
+inputs = ["tcp_source_1"]
+source = '''
+parsed, err = parse_regex(
+  .message,
+  r'^(?P<Logrecord>\S+)\s+(?P<Date>\d{4}-\d{2}-\d{2})\s+(?P<Time>\d{2}:\d{2}:\d{2}\.\d+)\s+(?P<Pid>\d+)\s+(?P<Level>[A-Z]+)\s+(?P<Component>\S+)\s+\[(?P<ADDR>[^\]]*)\]\s+(?P<Content>.*)$'
+)
+
+if err == null {
+  .Logrecord = parsed.Logrecord
+  .Date = parsed.Date
+  .Time = parsed.Time
+  .Pid = to_int(parsed.Pid) ?? parsed.Pid
+  .Level = parsed.Level
+  .Component = parsed.Component
+  .ADDR = parsed.ADDR
+  .Content = parsed.Content
+} else {
+  .Content = .message
+}
+
+content_str, content_err = to_string(.Content)
+if content_err == null {
+  .Content = content_str
+} else {
+  .Content = ""
+}
+
+if contains(.Content, "] Attempting claim: memory ") {
+  .EventId = "E1"
+  .EventTemplate = "[instance: <*>] Attempting claim: memory <*> MB, disk <*> GB, vcpus <*> CPU"
+} else if contains(.Content, "] Claim successful") {
+  .EventId = "E2"
+  .EventTemplate = "[instance: <*>] Claim successful"
+} else if contains(.Content, "] Creating image") {
+  .EventId = "E3"
+  .EventTemplate = "[instance: <*>] Creating image"
+} else if contains(.Content, "] Deleting instance files ") {
+  .EventId = "E4"
+  .EventTemplate = "[instance: <*>] Deleting instance files <*>"
+} else if contains(.Content, "] Deletion of ") {
+  .EventId = "E5"
+  .EventTemplate = "[instance: <*>] Deletion of <*> complete"
+} else if contains(.Content, "] disk limit not specified, defaulting to unlimited") {
+  .EventId = "E6"
+  .EventTemplate = "[instance: <*>] disk limit not specified, defaulting to unlimited"
+} else if contains(.Content, "] During sync_power_state the instance has a pending task (spawning). Skip.") {
+  .EventId = "E7"
+  .EventTemplate = "[instance: <*>] During sync_power_state the instance has a pending task (spawning). Skip."
+} else if contains(.Content, "] Instance destroyed successfully.") {
+  .EventId = "E8"
+  .EventTemplate = "[instance: <*>] Instance destroyed successfully."
+} else if contains(.Content, "] Instance spawned successfully.") {
+  .EventId = "E9"
+  .EventTemplate = "[instance: <*>] Instance spawned successfully."
+} else if contains(.Content, "memory limit: ") {
+  .EventId = "E10"
+  .EventTemplate = "[instance: <*>] memory limit: <*>.<*> MB, free: <*>.<*> MB"
+} else if contains(.Content, "] Terminating instance") {
+  .EventId = "E11"
+  .EventTemplate = "[instance: <*>] Terminating instance"
+} else if contains(.Content, " seconds to build instance.") {
+  .EventId = "E12"
+  .EventTemplate = "[instance: <*>] Took <*>.<*> seconds to build instance."
+} else if contains(.Content, " seconds to deallocate network for instance.") {
+  .EventId = "E13"
+  .EventTemplate = "[instance: <*>] Took <*>.<*> seconds to deallocate network for instance."
+} else if contains(.Content, " seconds to destroy the instance on the hypervisor.") {
+  .EventId = "E14"
+  .EventTemplate = "[instance: <*>] Took <*>.<*> seconds to destroy the instance on the hypervisor."
+} else if contains(.Content, " seconds to spawn the instance on the hypervisor.") {
+  .EventId = "E15"
+  .EventTemplate = "[instance: <*>] Took <*>.<*> seconds to spawn the instance on the hypervisor."
+} else if contains(.Content, "] Total disk: ") {
+  .EventId = "E16"
+  .EventTemplate = "[instance: <*>] Total disk: <*> GB, used: <*>.<*> GB"
+} else if contains(.Content, "] Total memory: ") {
+  .EventId = "E17"
+  .EventTemplate = "[instance: <*>] Total memory: <*> MB, used: <*>.<*> MB"
+} else if contains(.Content, "] Total vcpu: ") {
+  .EventId = "E18"
+  .EventTemplate = "[instance: <*>] Total vcpu: <*> VCPU, used: <*>.<*> VCPU"
+} else if contains(.Content, "] vcpu limit not specified, defaulting to unlimited") {
+  .EventId = "E19"
+  .EventTemplate = "[instance: <*>] vcpu limit not specified, defaulting to unlimited"
+} else if contains(.Content, "] VM Paused (Lifecycle Event)") {
+  .EventId = "E20"
+  .EventTemplate = "[instance: <*>] VM Paused (Lifecycle Event)"
+} else if contains(.Content, "] VM Resumed (Lifecycle Event)") {
+  .EventId = "E21"
+  .EventTemplate = "[instance: <*>] VM Resumed (Lifecycle Event)"
+} else if contains(.Content, "] VM Started (Lifecycle Event)") {
+  .EventId = "E22"
+  .EventTemplate = "[instance: <*>] VM Started (Lifecycle Event)"
+} else if contains(.Content, "] VM Stopped (Lifecycle Event)") {
+  .EventId = "E23"
+  .EventTemplate = "[instance: <*>] VM Stopped (Lifecycle Event)"
+} else if contains(.Content, "\"DELETE ") {
+  .EventId = "E24"
+  .EventTemplate = "<*> \"DELETE <*>\" status: <*> len: <*> time: <*>.<*>"
+} else if contains(.Content, "\"GET ") {
+  .EventId = "E25"
+  .EventTemplate = "<*> \"GET <*>\" status: <*> len: <*> time: <*>.<*>"
+} else if contains(.Content, "\"POST ") {
+  .EventId = "E26"
+  .EventTemplate = "<*> \"POST <*>\" status: <*> len: <*> time: <*>.<*>"
+} else if contains(.Content, "Active base files: ") {
+  .EventId = "E27"
+  .EventTemplate = "Active base files: <*>"
+} else if contains(.Content, "Auditing locally available compute resources for node ") {
+  .EventId = "E28"
+  .EventTemplate = "Auditing locally available compute resources for node <*>"
+} else if contains(.Content, "Base or swap file too young to remove: ") {
+  .EventId = "E29"
+  .EventTemplate = "Base or swap file too young to remove: <*>"
+} else if contains(.Content, "Compute_service record updated for ") {
+  .EventId = "E30"
+  .EventTemplate = "Compute_service record updated for <*>"
+} else if contains(.Content, "Creating event network-vif-plugged:") {
+  .EventId = "E31"
+  .EventTemplate = "Creating event network-vif-plugged:<*>-<*>-<*>-<*>-<*> for instance <*>"
+} else if contains(.Content, "Final resource view: name=") {
+  .EventId = "E32"
+  .EventTemplate = "Final resource view: name=<*> phys_ram=<*> used_ram=<*> phys_disk=<*> used_disk=<*> total_vcpus=<*> used_vcpus=<*> pci_stats=[]"
+} else if contains(.Content, "HTTP exception thrown: No instances found for any event") {
+  .EventId = "E33"
+  .EventTemplate = "HTTP exception thrown: No instances found for any event"
+} else if contains(.Content, "): checking") {
+  .EventId = "E34"
+  .EventTemplate = "image <*> at (<*>): checking"
+} else if contains(.Content, "): in use: on this node ") {
+  .EventId = "E35"
+  .EventTemplate = "image <*> at (<*>): in use: on this node <*> local, <*> on other nodes sharing this instance storage"
+} else if contains(.Content, "Removable base files: ") {
+  .EventId = "E36"
+  .EventTemplate = "Removable base files: <*>"
+} else if contains(.Content, "Removing base or swap file: ") {
+  .EventId = "E37"
+  .EventTemplate = "Removing base or swap file: <*>"
+} else if contains(.Content, "Running instance usage audit for host ") {
+  .EventId = "E38"
+  .EventTemplate = "Running instance usage audit for host <*> from <*>-<*>-<*> <*>:<*>:<*> to <*>-<*>-<*> <*>:<*>:<*>. <*> instances."
+} else if contains(.Content, "Successfully synced instances from host '") {
+  .EventId = "E39"
+  .EventTemplate = "Successfully synced instances from host '<*>'."
+} else if contains(.Content, "The instance sync for host '") {
+  .EventId = "E40"
+  .EventTemplate = "The instance sync for host '<*>' did not match. Re-created its InstanceList."
+} else if contains(.Content, "Total usable vcpus: ") {
+  .EventId = "E41"
+  .EventTemplate = "Total usable vcpus: <*>, total allocated vcpus: <*>"
+} else if contains(.Content, "Unknown base file: ") {
+  .EventId = "E42"
+  .EventTemplate = "Unknown base file: <*>"
+} else if contains(.Content, "While synchronizing instance power states, found ") {
+  .EventId = "E43"
+  .EventTemplate = "While synchronizing instance power states, found <*> instances in the database and <*> instances on the hypervisor."
+} else {
+  .EventId = "UNMATCHED"
+  .EventTemplate = "UNMATCHED"
+}
+
+del(.message)
+'''
+
+[sinks.file_out]
+type = "blackhole"
+inputs = ["parser"]
+
+[api]
+    enabled = true

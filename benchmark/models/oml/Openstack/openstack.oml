@@ -1,0 +1,237 @@
+name : /oml/static/openstack
+rule : Openstack/openstack
+enable : true
+---
+
+static {
+    E1 = object {
+        id = chars(E1);
+        tpl = chars([instance: <*>] Attempting claim: memory <*> MB, disk <*> GB, vcpus <*> CPU)
+    };
+    E2 = object {
+        id = chars(E2);
+        tpl = chars([instance: <*>] Claim successful)
+    };
+
+    E3 = object {
+        id = chars(E3);
+        tpl = chars([instance: <*>] Creating image)
+    };
+    E4 = object {
+        id = chars(E4);
+        tpl = chars([instance: <*>] Deleting instance files <*>)
+    };
+    E5 = object {
+        id = chars(E5);
+        tpl = chars([instance: <*>] Deletion of <*> complete)
+    };
+    E6 = object {
+        id = chars(E6);
+        tpl = chars([instance: <*>] disk limit not specified, defaulting to unlimited)
+    };
+    E7 = object {
+        id = chars(E7);
+        tpl = chars([instance: <*>] During sync_power_state the instance has a pending task (spawning). Skip.)
+    };
+    E8 = object {
+        id = chars(E8);
+        tpl = chars([instance: <*>] Instance destroyed successfully.)
+    };
+    E9 = object {
+        id = chars(E9);
+        tpl = chars([instance: <*>] Instance spawned successfully.)
+    };
+    E10 = object {
+        id = chars(E10);
+        tpl = chars([instance: <*>] memory limit: <*>.<*> MB, free: <*>.<*> MB)
+    };
+    E11 = object {
+        id = chars(E11);
+        tpl = chars([instance: <*>] Terminating instance)
+    };
+    E12 = object {
+        id = chars(E12);
+        tpl = chars([instance: <*>] Took <*>.<*> seconds to build instance.)
+    };
+    E13 = object {
+        id = chars(E13);
+        tpl = chars([instance: <*>] Took <*>.<*> seconds to deallocate network for instance.)
+    };
+    E14 = object {
+        id = chars(E14);
+        tpl = chars([instance: <*>] Took <*>.<*> seconds to destroy the instance on the hypervisor.)
+    };
+    E15 = object {
+        id = chars(E15);
+        tpl = chars([instance: <*>] Took <*>.<*> seconds to spawn the instance on the hypervisor.)
+    };
+    E16 = object {
+        id = chars(E16);
+        tpl = chars([instance: <*>] Total disk: <*> GB, used: <*>.<*> GB)
+    };
+    E17 = object {
+        id = chars(E17);
+        tpl = chars([instance: <*>] Total memory: <*> MB, used: <*>.<*> MB)
+    };
+    E18 = object {
+        id = chars(E18);
+        tpl = chars([instance: <*>] Total vcpu: <*> VCPU, used: <*>.<*> VCPU)
+    };
+    E19 = object {
+        id = chars(E19);
+        tpl = chars([instance: <*>] vcpu limit not specified, defaulting to unlimited)
+    };
+    E20 = object {
+        id = chars(E20);
+        tpl = chars([instance: <*>] VM Paused (Lifecycle Event))
+    };
+    E21 = object {
+        id = chars(E21);
+        tpl = chars([instance: <*>] VM Resumed (Lifecycle Event))
+    };
+    E22 = object {
+        id = chars(E22);
+        tpl = chars([instance: <*>] VM Started (Lifecycle Event))
+    };
+    E23 = object {
+        id = chars(E23);
+        tpl = chars([instance: <*>] VM Stopped (Lifecycle Event))
+    };
+    E24 = object {
+        id = chars(E24);
+        tpl = chars(<*> "DELETE <*>" status: <*> len: <*> time: <*>.<*>)
+    };
+    E25 = object {
+        id = chars(E25);
+        tpl = chars(<*> "GET <*>" status: <*> len: <*> time: <*>.<*>)
+    };
+    E26 = object {
+        id = chars(E26);
+        tpl = chars(<*> "POST <*>" status: <*> len: <*> time: <*>.<*>
+    };
+    E27 = object {
+        id = chars(E27);
+        tpl = chars(Active base files: <*>)
+    };
+    E28 = object {
+        id = chars(E28);
+        tpl = chars(Auditing locally available compute resources for node <*>)
+    };
+    E29 = object {
+        id = chars(E29);
+        tpl = chars(Base or swap file too young to remove: <*>)
+    };
+    E30 = object {
+        id = chars(E30);
+        tpl = chars(Compute_service record updated for <*>)
+    };
+    E31 = object {
+        id = chars(E31);
+        tpl = chars(Creating event network-vif-plugged:<*>-<*>-<*>-<*>-<*> for instance <*>)
+    };
+    E32 = object {
+        id = chars(E32);
+        tpl = chars(Final resource view: name=<*> phys_ram=<*> used_ram=<*> phys_disk=<*> used_disk=<*> total_vcpus=<*> used_vcpus=<*> pci_stats=[])
+    };
+    E33 = object {
+        id = chars(E33);
+        tpl = chars(HTTP exception thrown: No instances found for any event)
+    };
+    E34 = object {
+        id = chars(E34);
+        tpl = chars(image <*> at (<*>): checking)
+    };
+    E35 = object {
+        id = chars(E35);
+        tpl = chars(image <*> at (<*>): in use: on this node <*> local, <*> on other nodes sharing this instance storage)
+    };
+    E36 = object {
+        id = chars(E36);
+        tpl = chars(Removable base files: <*>)
+    };
+    E37 = object {
+        id = chars(E37);
+        tpl = chars(Removing base or swap file: <*>)
+    };
+    E38 = object {
+        id = chars(E38);
+        tpl = chars(Running instance usage audit for host <*> from <*>-<*>-<*> <*>:<*>:<*> to <*>-<*>-<*> <*>:<*>:<*>. <*> instances.)
+    };
+    E39 = object {
+        id = chars(E39);
+        tpl = chars(Successfully synced instances from host '<*>'.)
+    };
+    E40 = object {
+        id = chars(E40);
+        tpl = chars(The instance sync for host '<*>' did not match. Re-created its InstanceList.)
+    };
+    E41 = object {
+        id = chars(E41);
+        tpl = chars(Total usable vcpus: <*>, total allocated vcpus: <*>)
+    };
+    E42 = object {
+        id = chars(E42);
+        tpl = chars(Unknown base file: <*>)
+    };
+    E43 = object {
+        id = chars(E43);
+        tpl = chars(While synchronizing instance power states, found <*> instances in the database and <*> instances on the hypervisor.)
+    };
+}
+Logrecord = read(Logrecord);
+Date = read(Date);
+Time = read(Time);
+Pid = read(Pid);
+Level = read(Level);
+Component = read(Component);
+ADDR = read(ADDR);
+Content = read(Content);
+
+__target = match read(Content) {
+    contains('] Attempting claim: memory ') => E1;
+    contains('] Claim successful') => E2;
+    contains('] Creating image') => E3;
+    contains('] Deleting instance files ') => E4;
+    contains('] Deletion of ') => E5;
+    contains('] disk limit not specified, defaulting to unlimited') => E6;
+    contains('During sync_power_state') => E7;
+    contains('] Instance destroyed successfully.') => E8;
+    contains('] Instance spawned successfully.') => E9;
+    contains('memory limit: ') => E10;
+    contains('] Terminating instance') => E11;
+    contains(' seconds to build instance.') => E12;
+    contains(' seconds to deallocate network for instance.') => E13;
+    contains(' seconds to destroy the instance on the hypervisor.') => E14;
+    contains(' seconds to spawn the instance on the hypervisor.') => E15;
+    contains('] Total disk: ') => E16;
+    contains('] Total memory: ') => E17;
+    contains('] Total vcpu: ') => E18;
+    contains('] vcpu limit not specified, defaulting to unlimited') => E19;
+    contains('] VM Paused (Lifecycle Event)') => E20;
+    contains('] VM Resumed (Lifecycle Event)') => E21;
+    contains('] VM Started (Lifecycle Event)') => E22;
+    contains('] VM Stopped (Lifecycle Event)') => E23;
+    contains('DELETE ') => E24;
+    contains('GET ') => E25;
+    contains('POST ') => E26;
+    contains('Active base files: ') => E27;
+    contains('Auditing locally available compute resources for node ') => E28;
+    contains('Base or swap file too young to remove: ') => E29;
+    contains('Compute_service record updated for ') => E30;
+    contains('Creating event network-vif-plugged:') => E31;
+    contains('Final resource view: name=') => E32;
+    contains('HTTP exception thrown: No instances found for any event') => E33;
+    contains(': checking') => E34;
+    contains(': in use: on this node ') => E35;
+    contains('Removable base files: ') => E36;
+    contains('Removing base or swap file: ') => E37;
+    contains('Running instance usage audit for host ') => E38;
+    contains('Successfully synced instances from host '') => E39;
+    contains('The instance sync for host '') => E40;
+    contains('Total usable vcpus: ') => E41;
+    contains('Unknown base file: ') => E42;
+    contains('While synchronizing instance power states, found ') => E43;
+};
+
+EventId = read(__target) | get(id);
+EventTemplate = read(__target) | get(tpl);

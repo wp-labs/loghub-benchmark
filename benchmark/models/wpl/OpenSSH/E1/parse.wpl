@@ -1,0 +1,16 @@
+package Openssh {
+    rule openssh
+    {
+        (
+            chars:Date,
+            digit:Day,
+            chars:time,
+            chars:Component,
+            peek_symbol(sshd),
+            _\[,
+            chars:pid\],
+            _,
+            chars:Content\,
+        )
+    }
+}

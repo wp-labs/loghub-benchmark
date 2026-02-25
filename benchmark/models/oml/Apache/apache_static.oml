@@ -1,0 +1,45 @@
+name : /oml/static/apache
+rule : Apache/apache
+enable :  true
+---
+static {
+    E1 = object {
+        id = chars(E1);
+        tpl = chars(jk2_init() Found child <*> in scoreboard slot <*>)
+    };
+    E2 = object {
+        id = chars(E2);
+        tpl = chars(workerEnv.init() ok <*>)
+    };
+    E3 = object {
+        id = chars(E3);
+        tpl = chars(mod_jk child workerEnv in error state <*>)
+    };
+    E4 = object {
+        id = chars(E4);
+        tpl = chars([client <*>] Directory index forbidden by rule: <*>)
+    };
+    E5 = object {
+        id = chars(E5);
+        tpl = chars(jk2_init() Can't find child <*> in scoreboard)
+    };
+    E6 = object {
+        id = chars(E6);
+        tpl = chars(mod_jk child init <*> <*>)
+    };
+}
+
+Time = read(Time);
+Level = read(Level);
+Content = read(Content);
+
+__target = match read(Content){
+    starts_with('jk2_init() Found child') => E1;
+    starts_with('workerEnv.init() ok') => E2;
+    starts_with('mod_jk child workerEnv in error state') => E3;
+    contains('Directory index forbidden by rule:') => E4;
+    starts_with('jk2_init() Can't find child') => E5;
+    starts_with('mod_jk child init') => E6;
+};
+EventId = read(__target) | get(id);
+EventTemplate = read(__target) | get(tpl);

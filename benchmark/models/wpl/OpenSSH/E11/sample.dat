@@ -1,0 +1,3 @@
+Dec 10 11:03:53 LabSZ sshd[25457]: fatal: Write failed: Connection reset by peer [preauth]
+Dec 30 09:54:06 LabSZ sshd[22948]: fatal: Write failed: Connection reset by peer [preauth]
+Dec 30 10:59:10 LabSZ sshd[26310]: fatal: Write failed: Connection reset by peer [preauth]

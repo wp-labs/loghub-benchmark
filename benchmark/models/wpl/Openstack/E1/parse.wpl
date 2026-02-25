@@ -1,0 +1,15 @@
+package Openstack {
+    rule openstack {
+        (
+          peek_symbol(nova),
+          chars:Logrecord,
+          chars:Date,
+          chars:Time,
+          digit:Pid,
+          chars:Level,
+          chars:Component,
+          chars:ADDR<[,]>,
+          chars:Content\0,
+        )
+    }
+}
